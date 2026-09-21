@@ -32,7 +32,7 @@
         </div>
     </nav>
     {{ $slot }}
-    <x-footer />
+
 </body>
 
 </html>
