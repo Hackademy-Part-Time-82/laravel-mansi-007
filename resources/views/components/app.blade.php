@@ -31,7 +31,10 @@
             </div>
         </div>
     </nav>
-    {{ $slot }}
+    <main class="container mt-5">
+        {{ $slot }}
+    </main>
+
 
 </body>
 

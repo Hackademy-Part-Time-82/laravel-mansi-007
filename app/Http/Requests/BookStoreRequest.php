@@ -25,6 +25,7 @@ class BookStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:100'],
+            'image' => ['mimes:jpeg,jpg,png'],
             //'pages' => ['required', 'max:400']
         ];
     }

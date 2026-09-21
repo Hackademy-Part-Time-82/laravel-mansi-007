@@ -22,6 +22,11 @@ class BookController extends Controller
         //return view('index', compact('books'));
     }
 
+    public function show(Book $book)
+    {
+        return view('show', ['book' => $book]);
+    }
+
     public function create()
     {
         return view('create');
@@ -29,13 +34,17 @@ class BookController extends Controller
 
     public function store(BookStoreRequest $request)
     {
-
+        $path_image = '';
+        if ($request->hasFile('image')) {
+            $path_image = $request->file('image')->store('covers', 'public');
+        }
         $book = Book::create([
             'name' => $request->input('name'),
             'pages' => $request->input('pages'),
             'year' => $request->input('year'),
+            'image' => $path_image,
         ]);
-        Mail::to('admin@email.it')->send(new BookMail($book));
+        //Mail::to('admin@email.it')->send(new BookMail($book));
         return redirect()->route('books.index')->with('success', 'Libro aggiunto con successo');
     }
 }
