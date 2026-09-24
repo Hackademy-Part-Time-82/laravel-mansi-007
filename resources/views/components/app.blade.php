@@ -30,8 +30,32 @@
                 </ul>
             </div>
         </div>
+        <div>
+            @auth
+                <div class="container-fluid">
+                    Ciao, {{ Auth::user()->name }}
+                </div>
+                <a href="/profilo">I Miei Libri</a>
+            @endauth
+
+            @guest
+                <div class="container-fluid">
+                    <a href="/register">Registrati</a>
+                    <a href="/login">Accedi</a>
+                </div>
+            @endguest
+
+        </div>
     </nav>
     <main class="container mt-5">
+        @auth
+            <p>La tua email è: {{ Auth::user()->email }}</p>
+            <hr>
+            <form action="/logout" method="POST" class="container my-5">
+                @csrf
+                <button type="submit" class="btn btn-danger">Esci dall'account</button>
+            </form>
+        @endauth
         {{ $slot }}
     </main>
 

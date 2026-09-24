@@ -43,6 +43,8 @@ class BookController extends Controller
             'pages' => $request->input('pages'),
             'year' => $request->input('year'),
             'image' => $path_image,
+            'user_id' => auth()->user()->id
+            //'user_id' => Auth::user()->id
         ]);
         //Mail::to('admin@email.it')->send(new BookMail($book));
         return redirect()->route('books.index')->with('success', 'Libro aggiunto con successo');
