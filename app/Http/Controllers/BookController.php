@@ -36,7 +36,8 @@ class BookController extends Controller
     {
         $path_image = '';
         if ($request->hasFile('image')) {
-            $path_image = $request->file('image')->store('covers', 'public');
+            $path_name = $request->file('image')->getClientOriginalName();
+            $path_image = $request->file('image')->storeAs('covers', $path_name, 'public');
         }
         $book = Book::create([
             'name' => $request->input('name'),
@@ -48,5 +49,48 @@ class BookController extends Controller
         ]);
         //Mail::to('admin@email.it')->send(new BookMail($book));
         return redirect()->route('books.index')->with('success', 'Libro aggiunto con successo');
+    }
+
+
+    public function edit(Book $book)
+    {
+        //$this->middleware('owner');
+        //se il libro è dell'utente mi mostri la pagina di modifica
+        //ALtrimenti se non è dell'utente, mostra pagibna non autorizzata 
+        if (auth()->user()->id == $book->user_id) {
+            return view('edit', ['book' => $book]);
+        }
+        abort(401);
+    }
+
+    public function update(BookStoreRequest $request, Book $book)
+    {
+        if (auth()->user()->id == $book->user_id) {
+            $path_image = $book->image;
+            if ($request->hasFile('image')) {
+                $path_name = $request->file('image')->getClientOriginalName();
+                $path_image = $request->file('image')->storeAs('covers', $path_name, 'public');
+            }
+            $book->update([
+                'name' => $request->input('name'),
+                'pages' => $request->input('pages'),
+                'year' => $request->input('year'),
+                'image' => $path_image,
+                'user_id' => auth()->user()->id
+                //'user_id' => Auth::user()->id
+            ]);
+            //Mail::to('admin@email.it')->send(new BookMail($book));
+            return redirect()->route('books.index')->with('success', 'Libro aggiornato con successo');
+        }
+        abort(401);
+    }
+
+    public function destroy(Book $book)
+    {
+        if (auth()->user()->id == $book->user_id) {
+            $book->delete();
+            return redirect()->route('books.index')->with('success', 'Libro eliminato con successo');
+        }
+        abort(401);
     }
 }
