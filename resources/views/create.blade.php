@@ -21,6 +21,14 @@
                 {{-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> --}}
             </div>
             <div class="mb-3">
+                <label for="inputYear" class="form-label">Autore</label>
+                <select class="form-select" aria-label="Default select example" name="author_id">
+                    @foreach ($authors as $author)
+                        <option value="{{ $author->id }}">{{ $author->firstname }} {{ $author->lastname }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="mb-3">
                 <label for="inputImage" class="form-label">Cover del Libro</label>
                 <input type="file" class="form-control" id="inputImage" name="image">
                 @error('image')

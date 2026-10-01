@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BookStoreRequest;
 use App\Mail\BookMail;
+use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -29,11 +30,13 @@ class BookController extends Controller
 
     public function create()
     {
-        return view('create');
+        $authors = Author::all();
+        return view('create', ['authors' => $authors]);
     }
 
     public function store(BookStoreRequest $request)
     {
+
         $path_image = '';
         if ($request->hasFile('image')) {
             $path_name = $request->file('image')->getClientOriginalName();
@@ -44,9 +47,11 @@ class BookController extends Controller
             'pages' => $request->input('pages'),
             'year' => $request->input('year'),
             'image' => $path_image,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
+            'author_id' => $request->input('author_id'),
             //'user_id' => Auth::user()->id
         ]);
+
         //Mail::to('admin@email.it')->send(new BookMail($book));
         return redirect()->route('books.index')->with('success', 'Libro aggiunto con successo');
     }
@@ -58,7 +63,8 @@ class BookController extends Controller
         //se il libro è dell'utente mi mostri la pagina di modifica
         //ALtrimenti se non è dell'utente, mostra pagibna non autorizzata 
         if (auth()->user()->id == $book->user_id) {
-            return view('edit', ['book' => $book]);
+            $authors = Author::all();
+            return view('edit', ['book' => $book, 'authors' => $authors]);
         }
         abort(401);
     }
@@ -76,7 +82,8 @@ class BookController extends Controller
                 'pages' => $request->input('pages'),
                 'year' => $request->input('year'),
                 'image' => $path_image,
-                'user_id' => auth()->user()->id
+                'user_id' => auth()->user()->id,
+                'author_id' => $request->input('author_id'),
                 //'user_id' => Auth::user()->id
             ]);
             //Mail::to('admin@email.it')->send(new BookMail($book));

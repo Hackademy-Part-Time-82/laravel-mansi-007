@@ -22,6 +22,16 @@
                 {{-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> --}}
             </div>
             <div class="mb-3">
+                <label for="inputYear" class="form-label">Autore</label>
+                <select class="form-select" aria-label="Default select example" name="author_id">
+                    @foreach ($authors as $author)
+                        <option @if ($author->id == $book->author_id) selected @endif value="{{ $author->id }}">
+                            {{ $author->firstname }} {{ $author->lastname }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="mb-3">
                 <div class="col-md-4 text-center bg-light p-3">
                     <x-image-book :$book class="img-fluid rounded shadow-sm" />
                 </div>

@@ -32,6 +32,7 @@
                                 <span class="fw-bold text-dark">{{ $book->pages ?? 'N/D' }}</span>
                             </div>
                         </div>
+                        Autore: {{ $book->author->firstname }} {{ $book->author->lastname }}
                     </div>
                 </div>
             </div>
