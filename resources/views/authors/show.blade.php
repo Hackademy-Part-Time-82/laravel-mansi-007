@@ -18,6 +18,7 @@
                             <div class="col">
                                 <div class="card">
                                     <x-image-book :$book />
+                                    <a href="{{ route('books.show', ['book' => $book]) }}">Dettaglio</a>
                                 </div>
                             </div>
                         @endforeach
