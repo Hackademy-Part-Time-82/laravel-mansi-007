@@ -29,6 +29,21 @@
                 </select>
             </div>
             <div class="mb-3">
+                @foreach ($categories as $category)
+                    <div class="form-check">
+
+                        <input class="form-check-input" type="checkbox" name="categories[]" value="{{ $category->id }}"
+                            id="checkDefault-{{ $category->id }}">
+
+                        <label class="form-check-label" for="checkDefault-{{ $category->id }}">
+
+                            {{ $category->name }}
+                        </label>
+
+                    </div>
+                @endforeach
+            </div>
+            <div class="mb-3">
                 <label for="inputImage" class="form-label">Cover del Libro</label>
                 <input type="file" class="form-control" id="inputImage" name="image">
                 @error('image')

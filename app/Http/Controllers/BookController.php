@@ -6,6 +6,7 @@ use App\Http\Requests\BookStoreRequest;
 use App\Mail\BookMail;
 use App\Models\Author;
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -31,7 +32,8 @@ class BookController extends Controller
     public function create()
     {
         $authors = Author::all();
-        return view('create', ['authors' => $authors]);
+        $categories = Category::all();
+        return view('create', ['authors' => $authors, 'categories' => $categories]);
     }
 
     public function store(BookStoreRequest $request)
@@ -51,6 +53,7 @@ class BookController extends Controller
             'author_id' => $request->input('author_id'),
             //'user_id' => Auth::user()->id
         ]);
+        $book->categories()->attach($request->input('categories'));
 
         //Mail::to('admin@email.it')->send(new BookMail($book));
         return redirect()->route('books.index')->with('success', 'Libro aggiunto con successo');
@@ -64,7 +67,8 @@ class BookController extends Controller
         //ALtrimenti se non è dell'utente, mostra pagibna non autorizzata 
         if (auth()->user()->id == $book->user_id) {
             $authors = Author::all();
-            return view('edit', ['book' => $book, 'authors' => $authors]);
+            $categories = Category::all();
+            return view('edit', ['book' => $book, 'authors' => $authors, 'categories' => $categories]);
         }
         abort(401);
     }
@@ -86,6 +90,9 @@ class BookController extends Controller
                 'author_id' => $request->input('author_id'),
                 //'user_id' => Auth::user()->id
             ]);
+            // $book->categories()->detach();
+            // $book->categories()->attach($request->input('categories'));
+            $book->categories()->sync($request->input('categories'));
             //Mail::to('admin@email.it')->send(new BookMail($book));
             return redirect()->route('books.index')->with('success', 'Libro aggiornato con successo');
         }
@@ -95,6 +102,7 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         if (auth()->user()->id == $book->user_id) {
+            $book->categories()->detach();
             $book->delete();
             return redirect()->route('books.index')->with('success', 'Libro eliminato con successo');
         }

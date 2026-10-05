@@ -33,6 +33,11 @@
                             </div>
                         </div>
                         Autore: {{ $book->author->firstname }} {{ $book->author->lastname }}
+                        <ul>
+                            @foreach ($book->categories as $ciccio)
+                                <li>{{ $ciccio->name }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
             </div>
